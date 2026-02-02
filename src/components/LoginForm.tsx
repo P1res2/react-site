@@ -1,9 +1,7 @@
 "use client";
 
-import React from "react";
-
 import { useState } from "react";
-import { Button } from "antd";
+import { Button, Form } from "antd";
 import { Checkbox } from "antd";
 import { Input } from "antd";
 import type { CheckboxProps } from "antd";
@@ -13,6 +11,12 @@ import { FaGithub, FaGoogle } from "react-icons/fa";
 
 type LoginFormProps = {
   changePage?: (page: Pages) => void;
+};
+
+type FieldType = {
+  email?: string;
+  password?: string;
+  remember?: boolean;
 };
 
 export function LoginForm({ changePage }: LoginFormProps) {
@@ -25,8 +29,7 @@ export function LoginForm({ changePage }: LoginFormProps) {
     setRememberMe(e.target.checked);
   };
 
-  const handleSubmit = (e: React.SubmitEvent) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     setLoading(true);
     console.log("[v0] Login submitted:", { email, rememberMe });
     setTimeout(() => {
@@ -57,14 +60,20 @@ export function LoginForm({ changePage }: LoginFormProps) {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="space-y-2">
-            <label
-              htmlFor="email"
-              className="text-sm font-medium text-foreground"
-            >
-              E-mail
-            </label>
+        <Form
+          onFinish={handleSubmit}
+          className="space-y-5"
+          requiredMark={false}
+        >
+          <Form.Item<FieldType>
+            layout="vertical"
+            label="E-mail"
+            labelCol={{ className: "text-sm font-medium text-foreground" }}
+            name="email"
+            rules={[
+              { required: true, message: "Por favor, insira seu e-mail!" },
+            ]}
+          >
             <Input
               id="email"
               alt="Email input"
@@ -75,29 +84,29 @@ export function LoginForm({ changePage }: LoginFormProps) {
               className="h-11 bg-secondary border-border text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-ring"
               required
             />
-          </div>
+          </Form.Item>
 
-          <div className="space-y-2">
-            <label
-              htmlFor="password"
-              className="text-sm font-medium text-foreground"
-            >
-              Senha
-            </label>
-            <div className="relative">
-              <Input.Password
-                id="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="h-11 bg-secondary border-border text-foreground placeholder:text-muted-foreground pr-10 focus:border-ring focus:ring-ring"
-                required
-              />
-            </div>
-          </div>
+          <Form.Item<FieldType>
+            layout="vertical"
+            label="Senha"
+            labelCol={{ className: "text-sm font-medium text-foreground" }}
+            name="password"
+            rules={[
+              { required: true, message: "Por favor, insira sua senha!" },
+            ]}
+          >
+            <Input.Password
+              id="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="h-11 bg-secondary border-border text-foreground placeholder:text-muted-foreground pr-10 focus:border-ring focus:ring-ring"
+              required
+            />
+          </Form.Item>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+          <Form.Item<FieldType> layout="vertical" name="remember">
+            <div className="flex items-center justify-between">
               <Checkbox
                 id="remember"
                 checked={rememberMe}
@@ -106,25 +115,27 @@ export function LoginForm({ changePage }: LoginFormProps) {
               >
                 Lembrar de mim
               </Checkbox>
+              <button
+                onClick={() => changePage?.("register")}
+                className="text-sm font-medium text-foreground hover:text-foreground/80 transition-colors cursor-pointer"
+              >
+                Esqueceu a senha?
+              </button>
             </div>
-            <button
-              onClick={() => changePage?.("register")}
-              className="text-sm font-medium text-foreground hover:text-foreground/80 transition-colors cursor-pointer"
-            >
-              Esqueceu a senha?
-            </button>
-          </div>
+          </Form.Item>
 
-          <Button
-            type="default"
-            htmlType="submit"
-            disabled={!email || !password}
-            loading={loading}
-            className="w-full h-11 bg-foreground text-background hover:bg-foreground/90 font-medium rounded-md"
-          >
-            Entrar
-          </Button>
-        </form>
+          <Form.Item layout="vertical">
+            <Button
+              type="default"
+              htmlType="submit"
+              disabled={!email || !password}
+              loading={loading}
+              className="w-full h-11 bg-foreground text-background hover:bg-foreground/90 font-medium rounded-md"
+            >
+              Entrar
+            </Button>
+          </Form.Item>
+        </Form>
 
         <Divider
           classNames={{
