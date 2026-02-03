@@ -8,6 +8,7 @@ import { Input } from "antd";
 import { Divider } from "antd";
 import type { Pages } from "../App";
 import { FaGithub, FaGoogle } from "react-icons/fa";
+import { Logo } from "./Logo";
 
 type RegisterFormProps = {
   changePage?: (page: Pages) => void;
@@ -32,14 +33,7 @@ export function RegisterForm({ changePage }: RegisterFormProps) {
     <div className="flex min-h-full min-w-full flex-col items-center justify-center px-6 py-12 lg:px-12 xl:px-20">
       <div className="w-full max-w-sm mx-auto lg:mx-0">
         <div className="mb-8 lg:hidden">
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground">
-              <span className="text-lg font-bold text-background">G</span>
-            </div>
-            <span className="text-lg font-semibold text-foreground">
-              Gabriel
-            </span>
-          </div>
+          <Logo text="Gabriel" color="dark"/>
         </div>
 
         <div className="mb-8">

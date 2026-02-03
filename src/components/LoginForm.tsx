@@ -1,13 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Form } from "antd";
-import { Checkbox } from "antd";
-import { Input } from "antd";
-import type { CheckboxProps } from "antd";
-import { Divider } from "antd";
-import type { Pages } from "../App";
+import { Button, Checkbox, Divider, Form, Input } from "antd";
 import { FaGithub, FaGoogle } from "react-icons/fa";
+import type { Pages } from "../App";
+import { Logo } from "./Logo";
 
 type LoginFormProps = {
   changePage?: (page: Pages) => void;
@@ -20,18 +17,13 @@ type FieldType = {
 };
 
 export function LoginForm({ changePage }: LoginFormProps) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const onCheckedChange: CheckboxProps["onChange"] = (e) => {
-    setRememberMe(e.target.checked);
-  };
-
-  const handleSubmit = () => {
+  const handleSubmit = (values: FieldType) => {
     setLoading(true);
-    console.log("[v0] Login submitted:", { email, rememberMe });
+
+    console.log("[v2] Login submitted:", { ...values });
+
     setTimeout(() => {
       setLoading(false);
     }, 3000);
@@ -40,15 +32,9 @@ export function LoginForm({ changePage }: LoginFormProps) {
   return (
     <div className="flex min-h-full min-w-full flex-col items-center justify-center px-6 py-12 lg:px-12 xl:px-20">
       <div className="w-full max-w-sm mx-auto lg:mx-0">
+        {/* Logo */}
         <div className="mb-8 lg:hidden">
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground">
-              <span className="text-lg font-bold text-background">G</span>
-            </div>
-            <span className="text-lg font-semibold text-foreground">
-              Gabriel
-            </span>
-          </div>
+          <Logo text="Gabriel" color="dark"/>
         </div>
 
         <div className="mb-8">
@@ -61,58 +47,51 @@ export function LoginForm({ changePage }: LoginFormProps) {
         </div>
 
         <Form
+          name="login"
+          initialValues={{ remember: false }}
           onFinish={handleSubmit}
           className="space-y-5"
           requiredMark={false}
         >
           <Form.Item<FieldType>
+            name="email"
             layout="vertical"
             label="E-mail"
             labelCol={{ className: "text-sm font-medium text-foreground" }}
-            name="email"
             rules={[
               { required: true, message: "Por favor, insira seu e-mail!" },
+              { type: "email", message: "E-mail inválido!" },
             ]}
           >
             <Input
-              id="email"
-              alt="Email input"
-              type="email"
-              placeholder="seu@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               className="h-11 bg-secondary border-border text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-ring"
-              required
+              placeholder="seu@email.com"
+              allowClear
             />
           </Form.Item>
 
           <Form.Item<FieldType>
+            name="password"
             layout="vertical"
             label="Senha"
             labelCol={{ className: "text-sm font-medium text-foreground" }}
-            name="password"
             rules={[
               { required: true, message: "Por favor, insira sua senha!" },
             ]}
           >
             <Input.Password
-              id="password"
               placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               className="h-11 bg-secondary border-border text-foreground placeholder:text-muted-foreground pr-10 focus:border-ring focus:ring-ring"
-              required
             />
           </Form.Item>
 
-          <Form.Item<FieldType> layout="vertical" name="remember">
+          <Form.Item<FieldType>
+            layout="vertical"
+            name="remember"
+            valuePropName="checked"
+          >
             <div className="flex items-center justify-between">
-              <Checkbox
-                id="remember"
-                checked={rememberMe}
-                onChange={onCheckedChange}
-                className="border-border data-[state=checked]:bg-foreground data-[state=checked]:text-background"
-              >
+              <Checkbox className="border-border data-[state=checked]:bg-foreground data-[state=checked]:text-background">
                 Lembrar de mim
               </Checkbox>
               <button
@@ -128,7 +107,6 @@ export function LoginForm({ changePage }: LoginFormProps) {
             <Button
               type="default"
               htmlType="submit"
-              disabled={!email || !password}
               loading={loading}
               className="w-full h-11 bg-foreground text-background hover:bg-foreground/90 font-medium rounded-md"
             >

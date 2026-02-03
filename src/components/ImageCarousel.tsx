@@ -1,6 +1,7 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
+import { Logo } from "./Logo";
 
 const slides = [
   {
@@ -18,17 +19,17 @@ const slides = [
     title: "Conecte-se ao",
     subtitle: "futuro hoje",
   },
-]
+];
 
 export function ImageCarousel() {
-  const [currentSlide, setCurrentSlide] = useState(0)
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length)
-    }, 5000)
-    return () => clearInterval(interval)
-  }, [])
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="relative h-full w-full overflow-hidden bg-zinc-950">
@@ -75,13 +76,8 @@ export function ImageCarousel() {
       </div>
 
       <div className="absolute left-8 top-8 lg:left-12 lg:top-12">
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white">
-            <span className="text-lg font-bold text-zinc-950">G</span>
-          </div>
-          <span className="text-lg font-semibold text-white">Gabriel</span>
-        </div>
+        <Logo text="Gabriel"/>
       </div>
     </div>
-  )
+  );
 }
